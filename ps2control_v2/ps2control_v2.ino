@@ -24,9 +24,9 @@ int N_Y = 127;
 byte type = 0;
 byte vibrate = 0;
 int motorPin = 50;
-int pos = 80;
-int upperLimitAng=80;
-int lowerLimitAng=-20;
+int pos = 70;
+int upperLimitAng = 70;
+int lowerLimitAng = -20;
 
 PS2X ps2x;
 AF_DCMotor motor1(2);
@@ -38,8 +38,8 @@ Servo frontservo;
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(9600);
-  delay(500);
+  Serial.begin(19200);
+  delay(300);
   pinMode(motorPin, OUTPUT);
   error = ps2x.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, pressures, rumble);
   if (error == 0) {
@@ -80,10 +80,10 @@ void setup() {
 }
 
 void setSPD(int speed) {
-  motor2.setSpeed(speed);
-  motor3.setSpeed(speed);
-  motor4.setSpeed(speed);
-  motor1.setSpeed(speed);
+  motor1.setSpeed(1.014 * speed);
+  motor2.setSpeed(0.97 * speed);
+  motor3.setSpeed(0.996 * speed);
+  motor4.setSpeed(0.82 * speed);
 }
 void stop() {
   setSPD(0);
@@ -123,8 +123,8 @@ void loop() {
     stop();
   } else {
     speed = 120;
-    setSPD(speed);
     if (ps2x.Button(PSB_R2)) { //ROT RIGHT
+      Serial.println("Im going ROTRIGHT");
       setSPD(steeringSpd);
       motor4.run(FORWARD);
       motor3.run(BACKWARD);
@@ -132,6 +132,7 @@ void loop() {
       motor2.run(BACKWARD);
     }
     else if (ps2x.Button(PSB_L2)) { //ROT LEFT
+      Serial.println("Im going ROTLEFT");
       setSPD(steeringSpd);
       motor4.run(BACKWARD);
       motor3.run(FORWARD);
@@ -139,7 +140,8 @@ void loop() {
       motor2.run(FORWARD);
     }
     else if (ps2x.Button(PSB_SQUARE)) { //LEFT
-      Serial.print("Im going LEFT");
+      Serial.println("Im going LEFT");
+      setSPD(speed);
       motor1.run(FORWARD);
       motor2.run(BACKWARD);
       motor3.run(FORWARD);
@@ -147,23 +149,23 @@ void loop() {
     }
     else if (ps2x.Button(PSB_CIRCLE)) { //RIGHT
 
-      Serial.print("Im going RIGHT");
-
+      Serial.println("Im going RIGHT");
+      setSPD(speed);
       motor4.run(FORWARD);
       motor2.run(FORWARD);
       motor3.run(BACKWARD);
       motor1.run(BACKWARD);
     }
     else if (ps2x.Button(PSB_TRIANGLE)) { //FORWARD
-      Serial.print("Im going FORWARD");
-      motor4.setSpeed(0.9 * speed);
+      Serial.println("Im going FORWARD");
+      setSPD(speed);
       motor1.run(FORWARD);
       motor2.run(FORWARD);
       motor3.run(FORWARD);
       motor4.run(FORWARD);
     } else if (ps2x.Button(PSB_CROSS) ) { //BACKWARD
-      Serial.print("Im going BACKWARD");
-      motor4.setSpeed(0.9 * speed);
+      Serial.println("Im going BACKWARD");
+      setSPD(speed);
       motor1.run(BACKWARD);
       motor2.run(BACKWARD);
       motor3.run(BACKWARD);
@@ -183,7 +185,7 @@ void loop() {
   else if (ps2x.Button(PSB_PAD_DOWN)) {
     pos -= 10;
     if (pos <= lowerLimitAng) {
-      pos = lowerLimitAng;
+      pos =  lowerLimitAng;
     }
     frontservo.write(pos);
     delay(25);
