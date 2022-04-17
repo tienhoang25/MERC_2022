@@ -2,7 +2,7 @@
 #include <AFMotor.h>
 #include<Servo.h>
 
-//#define ENREAD 30
+//#define ENREAD 30 kdaslfjlsdkfs
 #define RELAY 50
 #define RELAY2 30
 
