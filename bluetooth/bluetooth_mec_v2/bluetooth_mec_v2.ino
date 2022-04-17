@@ -3,6 +3,7 @@
 #include<Servo.h>
 // Tien - trum git hub
 //#define ENREAD 30
+
 #define RELAY 50
 #define RELAY2 30
 
